@@ -2,6 +2,7 @@
 
 // Declaring functions
 void mainMenu(int &choice);
+void cropManager();
 
 int main() {
     int choice;
@@ -12,7 +13,8 @@ int main() {
         switch (choice) {
             // Crop Management
             case 1:
-                std::cout << "This is Crop Management\n"; // temporary, feel free to remove
+                std::cout << std::endl;
+                cropManager();
                 break;
 
             // Livestock Management
@@ -63,7 +65,53 @@ void mainMenu(int &choice) {
     std::cout << "5. System Overview\n";
     std::cout << "6. Exit\n";
     std::cout << "==========================\n";
-
+    std::cout << "Choice: ";
     std::cin >> choice;
+}
+
+void cropManager() {
+    int choice;
+
+    do {
+        std::cout << "===== CROP MANAGER =====\n";
+        std::cout << "1. Add New Crop\n";
+        std::cout << "2. View All Crops\n";
+        std::cout << "3. Update Growth Stage\n";
+        std::cout << "4. Delete Harvested Crop\n";
+        std::cout << "5. Back to Main Menu\n";
+        std::cout << "Choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            // Add crop
+            case 1:
+            
+                break;
+
+            // View crops
+            case 2:
+            
+                break;
+
+            // Update growth stages
+            case 3:
+
+                break;
+
+            // Delete crops
+            case 4:
+
+                break;
+
+            // Exit to Main Menu
+            case 5: 
+                mainMenu();
+                break;
+
+            default:
+                std::cout << "Please select a valid option (1-5)";
+                break;
+        }
+    } while (choice != 5);
 }
 
