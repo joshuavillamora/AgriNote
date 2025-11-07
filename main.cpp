@@ -13,7 +13,6 @@ int main() {
         switch (choice) {
             // Crop Management
             case 1:
-                std::cout << std::endl;
                 cropManager();
                 break;
 
@@ -67,6 +66,7 @@ void mainMenu(int &choice) {
     std::cout << "==========================\n";
     std::cout << "Choice: ";
     std::cin >> choice;
+    std::cout << std::endl;
 }
 
 void cropManager() {
@@ -105,13 +105,15 @@ void cropManager() {
 
             // Exit to Main Menu
             case 5: 
-                mainMenu();
+                mainMenu(choice);
                 break;
 
             default:
                 std::cout << "Please select a valid option (1-5)";
                 break;
         }
+
+        std::cout << std::endl;
     } while (choice != 5);
 }
 
