@@ -1,8 +1,12 @@
 #include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
 
 // Declaring functions
 void mainMenu(int &choice);
 void cropManager();
+void addCrop();
 
 int main() {
     int choice;
@@ -85,7 +89,7 @@ void cropManager() {
         switch (choice) {
             // Add crop
             case 1:
-            
+                addCrop();
                 break;
 
             // View crops
@@ -117,3 +121,49 @@ void cropManager() {
     } while (choice != 5);
 }
 
+// Stores each crops data
+struct cropData {
+    int id;
+    int area;
+    std::string type;
+    std::string plantingDate;
+    std::string harvestDate;
+};
+
+// Stores all crops in memory
+std::vector<cropData> crops;
+
+void addCrop() {
+    cropData crop;
+
+    std::cout << "====== ADD CROP ======\n";
+    std::cout << "Field ID: ";
+    std::cin >> crop.id;
+    std::cout << "Crop Type: ";
+    std::cin >> crop.type;
+    std::cout << "Area (hectares): ";
+    std::cin >> crop.area;
+    std::cout << "Planting Date (YYYY-MM-DD): ";
+    std::cin >> crop.plantingDate;
+    std::cout << "Harvesting Date (YYYY-MM-DD): ";
+    std::cin >> crop.harvestDate;
+
+    // Add to in memory Vector
+    crops.push_back(crop);
+
+    // Save to crops.csv file
+    std::ofstream file("crops.csv", std::ios::app);
+    if (file.is_open()) {
+        file << crop.id << ","
+             << crop.type << ","
+             << crop.area << ","
+             << crop.plantingDate << ","
+             << crop.harvestDate << "\n";
+
+        file.close();
+        
+        std::cout << "\nCrop added successfully!\n";
+    } else {
+        std::cerr << "\nError: Could not open crops.csv file.\n";
+    }
+}
