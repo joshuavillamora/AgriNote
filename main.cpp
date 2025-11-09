@@ -2,11 +2,13 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <iomanip>
 
 // Declaring functions
 void mainMenu(int &choice);
 void cropManager();
 void addCrop();
+void viewCrops();
 
 int main() {
     int choice;
@@ -94,7 +96,7 @@ void cropManager() {
 
             // View crops
             case 2:
-            
+                viewCrops();
                 break;
 
             // Update growth stages
@@ -166,4 +168,49 @@ void addCrop() {
     } else {
         std::cerr << "\nError: Could not open crops.csv file.\n";
     }
+}
+
+void viewCrops() {
+    std::ifstream file("crops.csv");
+    
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open crops.csv for reading.\n";
+        return;
+    }
+
+
+    std::string id, type, area, plantingDate, harvestDate;
+    
+    std::cout << "\n---------------------- CROP LIST ----------------------\n";
+    std::cout << std::left
+              << std::setw(5) << "ID"
+              << std::setw(10) << "Type"
+              << std::setw(10) << "Area"
+              << std::setw(15) << "Planting"
+              << std::setw(15) << "Harvesting" << "\n";
+    std::cout << "-------------------------------------------------------\n";
+
+    // Assigns data to each comma seperated variable
+    while (file.good()) {
+        std::getline(file, id, ',');
+        std::getline(file, type, ',');
+        std::getline(file, area, ',');
+        std::getline(file, plantingDate, ',');
+        std::getline(file, harvestDate, '\n');
+
+        // Skip if line is empty
+        if (id.empty()) {
+            break;
+        }
+
+        // Display crop data
+        std::cout << std::left
+                  << std::setw(5) << id
+                  << std::setw(10) << type
+                  << std::setw(10) << (area + " ha")
+                  << std::setw(15) << plantingDate
+                  << std::setw(15) << harvestDate << "\n";
+    }
+
+    file.close();
 }
