@@ -130,6 +130,7 @@ struct cropData {
     std::string type;
     std::string plantingDate;
     std::string harvestDate;
+    std::string growthStage;
 };
 
 // Stores all crops in memory
@@ -149,6 +150,8 @@ void addCrop() {
     std::cin >> crop.plantingDate;
     std::cout << "Harvesting Date (YYYY-MM-DD): ";
     std::cin >> crop.harvestDate;
+    std::cout << "Growth Stage (Planting/Growing/Harvesting/Completed): ";
+    std::cin >> crop.growthStage;
 
     // Add to in memory Vector
     crops.push_back(crop);
@@ -160,7 +163,8 @@ void addCrop() {
              << crop.type << ","
              << crop.area << ","
              << crop.plantingDate << ","
-             << crop.harvestDate << "\n";
+             << crop.harvestDate << ","
+             << crop.growthStage << "\n";
 
         file.close();
         
@@ -178,17 +182,17 @@ void viewCrops() {
         return;
     }
 
-
-    std::string id, type, area, plantingDate, harvestDate;
+    std::string id, type, area, plantingDate, harvestDate, growthStage;
     
-    std::cout << "\n---------------------- CROP LIST ----------------------\n";
+    std::cout << "\n------------------------------ CROP LIST -----------------------------\n";
     std::cout << std::left
               << std::setw(5) << "ID"
               << std::setw(10) << "Type"
               << std::setw(10) << "Area"
               << std::setw(15) << "Planting"
-              << std::setw(15) << "Harvesting" << "\n";
-    std::cout << "-------------------------------------------------------\n";
+              << std::setw(15) << "Harvesting"
+              << std::setw(15) << "Growth Stage";
+    std::cout << "\n----------------------------------------------------------------------\n";
 
     // Assigns data to each comma seperated variable
     while (file.good()) {
@@ -196,7 +200,8 @@ void viewCrops() {
         std::getline(file, type, ',');
         std::getline(file, area, ',');
         std::getline(file, plantingDate, ',');
-        std::getline(file, harvestDate, '\n');
+        std::getline(file, harvestDate, ',');
+        std::getline(file, growthStage, '\n');
 
         // Skip if line is empty
         if (id.empty()) {
@@ -209,7 +214,8 @@ void viewCrops() {
                   << std::setw(10) << type
                   << std::setw(10) << (area + " ha")
                   << std::setw(15) << plantingDate
-                  << std::setw(15) << harvestDate << "\n";
+                  << std::setw(15) << harvestDate 
+                  << std::setw(15) << growthStage << "\n";
     }
 
     file.close();
