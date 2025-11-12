@@ -9,6 +9,7 @@ void mainMenu(int &choice);
 void cropManager();
 void addCrop();
 void viewCrops();
+void updateGrowthStage();
 
 int main() {
     int choice;
@@ -101,7 +102,7 @@ void cropManager() {
 
             // Update growth stages
             case 3:
-
+                updateGrowthStage();
                 break;
 
             // Delete crops
@@ -219,4 +220,71 @@ void viewCrops() {
     }
 
     file.close();
+}
+
+void updateGrowthStage() {
+    std::vector<cropData> crops;
+    cropData crop;
+
+    std::ifstream file("crops.csv");
+
+    std::string id, type, area, plantingDate, harvestDate, growthStage;
+    int selectedId;
+    bool found = false;
+    
+    while (file.good()) {
+        std::getline(file, id, ',');
+        std::getline(file, type, ',');
+        std::getline(file, area, ',');
+        std::getline(file, plantingDate, ',');
+        std::getline(file, harvestDate, ',');
+        std::getline(file, growthStage, '\n');
+
+        if (id.empty()) continue; // skip empty lines
+        
+        crop.id = std::stoi(id);
+        crop.type = type;
+        crop.area = std::stoi(area);
+        crop.plantingDate = plantingDate;
+        crop.harvestDate = harvestDate;
+        crop.growthStage = growthStage;
+
+        crops.push_back(crop);
+    }
+    file.close();
+    
+    std::cout << "\n===== UPDATING GROWTH STAGE =====\n";
+    std::cout << "Enter a Crop Field ID: ";
+    std::cin >> selectedId;
+
+    for (auto &tempCrop : crops) {
+        if (tempCrop.id == selectedId) {
+            found = true;
+            std::cout << "Current Growth Stage: " << tempCrop.growthStage << "\n";
+            std::cout << "Enter new Growth Stage (Planting/Growing/Harvesting/Completed): ";
+            std::cin >> tempCrop.growthStage;
+            break;
+        }
+    }
+
+    if (!found) {
+        std::cout << "\nCrop with ID " << selectedId << " not found.\n";
+        return;
+    }
+
+    // Overwrite CSV with updated data
+    std::ofstream outFile("crops.csv", std::ios::trunc); // clear file first
+
+    for (auto &tempCrop : crops) {
+        outFile << tempCrop.id << ","
+             << tempCrop.type << ","
+             << tempCrop.area << ","
+             << tempCrop.plantingDate << ","
+             << tempCrop.harvestDate << ","
+             << tempCrop.growthStage << "\n";
+    }
+
+    outFile.close();
+
+    std::cout << "\nGrowth stage updated successfully!\n";
 }
