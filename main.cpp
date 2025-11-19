@@ -422,7 +422,7 @@ void updateLivestockHealth() {
         a.age = std::stoi(age);
         a.healthStatus = health;
         a.lastCheckupDate = lastCheck;
-        list,push_back(a);
+        list.push_back(a);
     }  
     file.close();
 
@@ -456,10 +456,45 @@ void updateLivestockHealth() {
     }
     out.close();
 
-    std:cout <<"Livestock health updated successfully. \n";
+    std::cout <<"Livestock health updated successfully. \n";
 }
 
 
 
-void deleteLivestock() {}
+void deleteLivestock() {
+    std::ifstream in("livestock.csv");
+    if (!in.is_open()) {
+        std::cerr << "Error: Could not open livestock.csv for reading.\n";
+        return;
+    }
+    std::vector<std::string> lines;
+    std::string line;
+    std::cout << "Enter Animal Id to delete: ";
+    std::string delId;
+    std::cin >> delId;
+
+    bool found = false;
+    while (std::getline(in, line)) {
+        if(line.empty()) continue;
+        size_t pos = line.find(",");
+        if (pos != std::string::npos) {
+            std::string id = line.substr(0, pos);
+            if (id == delId) {
+                found = true;
+                continue;
+            }
+        }
+        lines.push_back(line);
+    }
+    in.close();
+
+    if (!found) {
+        std::cout << "Animal ID nt found. \n";
+    } else {
+        std::ofstream out("livestock.csv", std::ios::trunc);
+        for (auto &l : lines) out << 1 << "\n";
+        out.close();
+        std::cout << "Livestock record deleted. \n";
+    }
+}
     
