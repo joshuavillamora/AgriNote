@@ -244,7 +244,48 @@ void updateGrowthStage() {
 }
 
 void deleteCrop() {
+    char id[5];
+    char answer;
+    bool found = false;
 
+    
+    std::cin.ignore();
+
+    std::cout << "Enter Crop Field ID to delete: ";
+    std::cin.getline(id, 5);
+
+
+    for (int i = 0; i < MAX; i++) {
+        if (id == fieldId[i]) {
+            std::cout << "\n----------------------------------------------------------------------\n";
+            std::cout << std::left
+                      << std::setw(5) << fieldId[i]
+                      << std::setw(10) << crops[i]
+                      << std::setw(10) << fieldArea[i]
+                      << std::setw(15) << plantingDate[i]
+                      << std::setw(15) << harvestingDate[i]
+                      << std::setw(15) << growthStage[i];
+            std::cout << "\n----------------------------------------------------------------------\n";
+            std::cout << "Are you sure you want to delete this crop? (Y/N)\n>> ";
+            std::cin >> answer;
+            
+            if (answer == 'Y' || answer == 'y') {
+                fieldId[i] = "";
+                crops[i] = "";
+                fieldArea[i] = "";
+                plantingDate[i] = "";
+                harvestingDate[i] = "";
+                growthStage[i] = "";
+
+                std::cout << "Crop has been successfully removed!";
+            }
+            found = true;
+        }
+    }
+
+    if (found == false) {
+        std::cout << "Crop Field ID does not exist!";
+    }
 }
 
 void livestockManager() {
