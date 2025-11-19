@@ -10,6 +10,7 @@ void cropManager();
 void addCrop();
 void viewCrops();
 void updateGrowthStage();
+void deleteCrops();
 
 int main() {
     int choice;
@@ -107,7 +108,7 @@ void cropManager() {
 
             // Delete crops
             case 4:
-
+                deleteCrops();
                 break;
 
             // Exit to Main Menu
@@ -287,4 +288,68 @@ void updateGrowthStage() {
     outFile.close();
 
     std::cout << "\nGrowth stage updated successfully!\n";
+}
+
+void deleteCrops() {
+    std::vector<cropData> crops;
+    cropData crop;
+
+    std::ifstream file("crops.csv");
+
+    std::string id, type, area, plantingDate, harvestDate, growthStage;
+    int selectedId;
+    bool found = false;
+    char answer;
+    char blank = ' ';
+    
+    while (file.good()) {
+        std::getline(file, id, ',');
+        std::getline(file, type, ',');
+        std::getline(file, area, ',');
+        std::getline(file, plantingDate, ',');
+        std::getline(file, harvestDate, ',');
+        std::getline(file, growthStage, '\n');
+
+        if (id.empty()) continue; // skip empty lines
+        
+        crop.id = std::stoi(id);
+        crop.type = type;
+        crop.area = std::stoi(area);
+        crop.plantingDate = plantingDate;
+        crop.harvestDate = harvestDate;
+        crop.growthStage = growthStage;
+
+        crops.push_back(crop);
+    }
+    file.close();
+    
+    std::cout << "\n===== DELETE CROP =====\n";
+    std::cout << "Enter a Crop Field ID: ";
+    std::cin >> selectedId;
+
+    for (auto &tempCrop : crops) {
+        if (tempCrop.id == selectedId) {
+            found = true;
+            std::cout << "\n----------------------------------------------------------------------\n";
+            std::cout << std::left
+                    << std::setw(5) << crop.id
+                    << std::setw(10) << crop.type
+                    << std::setw(10) << (crop.area + " ha")
+                    << std::setw(15) << crop.plantingDate
+                    << std::setw(15) << crop.harvestDate 
+                    << std::setw(15) << crop.growthStage << "\n";
+            std::cout << "----------------------------------------------------------------------\n";
+            std::cout << "Are you sure you want to delete this crop? (Y/N) ";
+            std::cin >> answer;
+            if (answer == 'Y' || answer == 'y') {     
+                crop.id = blank;
+                crop.type = blank;
+                crop.area = blank;
+                crop.plantingDate = blank;
+                crop.harvestDate = blank;
+                crop.growthStage = blank;   
+            }
+            break;
+        }
+    }  
 }
