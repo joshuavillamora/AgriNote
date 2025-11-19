@@ -192,6 +192,21 @@ void viewCrops() {
               << std::setw(15) << "Harvesting"
               << std::setw(15) << "Growth Stage";
     std::cout << "\n----------------------------------------------------------------------\n";
+    for (int i = 0; i < MAX; i++) { 
+        if (fieldId[i] != "\0") {
+            std::cout << std::left
+                      << std::setw(5) << fieldId[i]
+                      << std::setw(10) << crops[i]
+                      << std::setw(10) << fieldArea[i]
+                      << std::setw(15) << plantingDate[i]
+                      << std::setw(15) << harvestingDate[i]
+                      << std::setw(15) << growthStage[i] << "\n";
+        } 
+        else {
+            std::cout << "----------------------------------------------------------------------\n";
+            break;
+        }
+    }
 }
 
 void updateGrowthStage() {
