@@ -295,3 +295,38 @@ void updateGrowthStage() {
 
     std::cout << "\nGrowth stage updated successfully!\n";
 }
+
+struct livestockData {
+    int id;
+    std::string species;
+    int age;
+    std::string healthStatus;
+    std::string lastCeckpodate;
+};
+
+void liveStockManager() {
+    int choice;
+    do {
+        std::cout << "===== LIVESTOCK MANAGER =====\n";
+        std::cout << "1. Add New Livestock\n";
+        std::cout << "2. View All Livestock\n";
+        std::cout << "3. Update Health Status\n";
+        std::cout << "4. Delete Livestock Record\n";
+        std::cout << "5. Back to Main Menu\n";
+        std::cout << "Choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1: addLivestock(); break;
+            case 2: addLivestock(); break;
+            case 3: addLivestock(); break;
+            case 4: addLivestock(); break;
+            case 5: addLivestock(); break;
+            default: std::cout << "Please select a valid option (1-5)\n"; break;
+
+        }
+
+        std::cout <<std::endl;
+    } while (choice !=5);
+}
+
