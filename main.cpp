@@ -18,6 +18,15 @@ void viewLivestock();
 void updateLivestock();
 void deleteLivestock();
 
+const int MAX = 50; // amount of rows
+
+std::string fieldId[MAX] = {};
+std::string crops[MAX] = {};
+std::string fieldArea[MAX] = {};
+std::string plantingDate[MAX] = {};
+std::string harvestingDate[MAX] = {};
+std::string growthStage[MAX] = {};
+
 int main() {
     int choice;
 
@@ -114,7 +123,7 @@ void cropManager() {
 
             // Delete crops
             case 4:
-                deleteCrops();
+                deleteCrop();
                 break;
 
             // Exit to Main Menu
@@ -132,13 +141,45 @@ void cropManager() {
 }
 
 void addCrop() {
+    // Declare variables and apply character limit
+    const int SIZE = 20;
+    char id[SIZE];
+    char crop[SIZE];
+    char area[SIZE];
+    char plant[SIZE];
+    char harvest[SIZE];
+    char stage[SIZE];
+
+    std::cin.ignore(); // Clears input buffer
+
+    // Take user input
     std::cout << "====== ADD CROP ======\n";
     std::cout << "Field ID: ";
+    std::cin.getline(id, SIZE);
     std::cout << "Crop Type: ";
+    std::cin.getline(crop, SIZE);
     std::cout << "Area (hectares): ";
+    std::cin.getline(area, SIZE);
     std::cout << "Planting Date (YYYY-MM-DD): ";
+    std::cin.getline(plant, SIZE);
     std::cout << "Harvesting Date (YYYY-MM-DD): ";
+    std::cin.getline(harvest, SIZE);
     std::cout << "Growth Stage (Planting/Growing/Harvesting/Completed): ";
+    std::cin.getline(stage, SIZE);
+
+    // Adds data to empty row
+    for (int i = 0; i < MAX; i++) {
+        if (fieldId[i] == "\0") {
+            fieldId[i] = id;
+            crops[i] = crop;
+            fieldArea[i] = area;
+            plantingDate[i] = plant;
+            harvestingDate[i] = harvest;
+            growthStage[i] = stage;
+
+            break;
+        }
+    }
 }
 
 void viewCrops() {
