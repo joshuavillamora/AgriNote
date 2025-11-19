@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <vector>
 #include <string>
 #include <iomanip>
 
@@ -10,6 +9,7 @@ void cropManager();
 void addCrop();
 void viewCrops();
 void updateGrowthStage();
+<<<<<<< HEAD
 
 //Declaring of fucntions for Livestock module
 void livestockManager();
@@ -18,6 +18,9 @@ void viewLivestock();
 void updateLivestock();
 void deleteLivestock();
 
+=======
+void deleteCrops();
+>>>>>>> b20303ddbde5e625cafabc663f9f5293ac3afdc8
 
 int main() {
     int choice;
@@ -115,7 +118,7 @@ void cropManager() {
 
             // Delete crops
             case 4:
-
+                deleteCrops();
                 break;
 
             // Exit to Main Menu
@@ -131,19 +134,6 @@ void cropManager() {
         std::cout << std::endl;
     } while (choice != 5);
 }
-
-// Stores each crops data
-struct cropData {
-    int id;
-    int area;
-    std::string type;
-    std::string plantingDate;
-    std::string harvestDate;
-    std::string growthStage;
-};
-
-// Stores all crops in memory
-std::vector<cropData> crops;
 
 void addCrop() {
     cropData crop;
@@ -297,14 +287,11 @@ void updateGrowthStage() {
     std::cout << "\nGrowth stage updated successfully!\n";
 }
 
-struct livestockData {
-    int id;
-    std::string species;
-    int age;
-    std::string healthStatus;
-    std::string lastCheckupDate;
-};
+void deleteCrops() {
+    std::vector<cropData> crops;
+    cropData crop;
 
+<<<<<<< HEAD
 void livestockManager() {
     int choice;
     do {
@@ -379,26 +366,42 @@ void viewLivestock() {
               << std::setw(15) << "Last Checkup" << "\n";
     std::cout << "\n----------------------------------------------------------------------\n";
  
+=======
+    std::ifstream file("crops.csv");
+
+    std::string id, type, area, plantingDate, harvestDate, growthStage;
+    int selectedId;
+    bool found = false;
+    char answer;
+    char blank = ' ';
+    
+>>>>>>> b20303ddbde5e625cafabc663f9f5293ac3afdc8
     while (file.good()) {
         std::getline(file, id, ',');
-        std::getline(file, species, ',');
-        std::getline(file, age, ',');
-        std::getline(file, health, ',');
-        std::getline(file, lastCheck, ',');
+        std::getline(file, type, ',');
+        std::getline(file, area, ',');
+        std::getline(file, plantingDate, ',');
+        std::getline(file, harvestDate, ',');
+        std::getline(file, growthStage, '\n');
 
-        if (id.empty()) break;
+        if (id.empty()) continue; // skip empty lines
+        
+        crop.id = std::stoi(id);
+        crop.type = type;
+        crop.area = std::stoi(area);
+        crop.plantingDate = plantingDate;
+        crop.harvestDate = harvestDate;
+        crop.growthStage = growthStage;
 
-       std::cout << std::left
-                  << std::setw(6) << id
-                  << std::setw(12) << species
-                  << std::setw(8) << age  
-                  << std::setw(18) << health
-                  << std::setw(15) << lastCheck << "\n";
+        crops.push_back(crop);
     }
-
     file.close();
-} 
+    
+    std::cout << "\n===== DELETE CROP =====\n";
+    std::cout << "Enter a Crop Field ID: ";
+    std::cin >> selectedId;
 
+<<<<<<< HEAD
 void updateLivestockHealth() {
     // Reads all records into memory
     std::ifstream file("livestock.csv");
@@ -483,19 +486,31 @@ void deleteLivestock() {
             if (id == delId) {
                 found = true;
                 continue;
+=======
+    for (auto &tempCrop : crops) {
+        if (tempCrop.id == selectedId) {
+            found = true;
+            std::cout << "\n----------------------------------------------------------------------\n";
+            std::cout << std::left
+                    << std::setw(5) << crop.id
+                    << std::setw(10) << crop.type
+                    << std::setw(10) << (crop.area + " ha")
+                    << std::setw(15) << crop.plantingDate
+                    << std::setw(15) << crop.harvestDate 
+                    << std::setw(15) << crop.growthStage << "\n";
+            std::cout << "----------------------------------------------------------------------\n";
+            std::cout << "Are you sure you want to delete this crop? (Y/N) ";
+            std::cin >> answer;
+            if (answer == 'Y' || answer == 'y') {     
+                crop.id = blank;
+                crop.type = blank;
+                crop.area = blank;
+                crop.plantingDate = blank;
+                crop.harvestDate = blank;
+                crop.growthStage = blank;   
+>>>>>>> b20303ddbde5e625cafabc663f9f5293ac3afdc8
             }
+            break;
         }
-        lines.push_back(line);
-    }
-    in.close();
-
-    if (!found) {
-        std::cout << "Animal ID nt found. \n";
-    } else {
-        std::ofstream out("livestock.csv", std::ios::trunc);
-        for (auto &l : lines) out << 1 << "\n";
-        out.close();
-        std::cout << "Livestock record deleted. \n";
-    }
+    }  
 }
-    
