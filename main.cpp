@@ -11,6 +11,13 @@ void addCrop();
 void viewCrops();
 void updateGrowthStage();
 
+//Declaring of fucntions for Livestock module
+void livestockManager();
+void addLivestock();
+void viiewLivestck();
+void deleteLivestock();
+
+
 int main() {
     int choice;
 
