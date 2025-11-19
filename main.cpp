@@ -301,7 +301,7 @@ struct livestockData {
     std::string species;
     int age;
     std::string healthStatus;
-    std::string lastCheckpDate;
+    std::string lastCheckupDate;
 };
 
 void liveStockManager() {
@@ -342,7 +342,7 @@ void addLivestock() {
     std::cout << "Health Status (Healthy?Sick/Undertreatment): ";
     std::cin >> a.healthStatus;
     std::cout << "Last Checkup Date (YYYY-MM-DD): ";
-    std::cin >> a.lastCheckpDate;
+    std::cin >> a.lastCheckupDate;
 
     //saves tp to CSV
     std::ofstream file("livestocl.csv", std::ios::app);
@@ -351,7 +351,7 @@ void addLivestock() {
              << a.species << ","
              << a.age << ","
              << a.healthStatus << ","
-             << a.lastCheckpDate << "\n";
+             << a.lastCheckupDate << "\n";
 
         file.close();
 
@@ -364,7 +364,7 @@ void addLivestock() {
 void viewLivestock() {
     std::ifstream file("livestock.csv");
     if (!file.is_open()) {
-        std::cerr << "Error: Couldnot open livestock.csv for reading.\n";
+        std::cerr << "Error: Could not open livestock.csv for reading.\n";
         return;
     }
 
@@ -397,4 +397,69 @@ void viewLivestock() {
 
     file.close();
 } 
+
+void updateLivestockHealth() {
+    // Reads all records into memory
+    std::ifstream file("livestock.csv");
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open livestock.csv for reading.\n";
+        return;
+    }
+
+    std::vector<livestockData> list;
+    std::string id, species, age, health, lastCheck;
+    while (file.good()) {
+        std::getline(file, id, ',');
+        std::getline(file, species, ',');
+        std::getline(file, age, ',');
+        std::getline(file, health, ',');
+        std::getline(file, lastCheck, ',');
+
+        if (id.empty()) continue;
+        livestockData a;
+        a.id = std::stoi(id);
+        a.species = species;
+        a.age = std::stoi(age);
+        a.healthStatus = health;
+        a.lastCheckupDate = lastCheck;
+        list,push_back(a);
+    }  
+    file.close();
+
+    int searchId;
+    std::cout << "Enter Animal ID to update: ";
+    std::cin >> searchId;
+
+    bool found = false;
+    for (auto &a : list) {
+        if (a.id == searchId) {
+        found = true;
+        std::cout << "Current health status: " << a.healthStatus << "\n";
+        std::cout << "Enter a new health status";
+        std::cin >> a.healthStatus;
+        std::cout << "Enter last checkup date (YYYY-MM-DD): ";
+        std::cin >> a.lastCheckupDate;
+        break;
+        }
+    }
+
+    if (!found) {
+    std::cout << "Animal ID not found.\n";
+    return;
+    }
+
+    //Overwrites the file(csv) with updated dats
+    std::ofstream out("livestock.csv", std::ios::trunc);
+        for (auto &a : list) {
+    out << a.id << "," << a.species << "," << a.age << "," << a.healthStatus << "," << a.lastCheckupDate << "\n";
+
+    }
+    out.close();
+
+    std:cout <<"Livestock health updated successfully. \n";
+}
+
+
+
+void deleteLivestock() {}
     
