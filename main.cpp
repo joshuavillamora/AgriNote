@@ -301,7 +301,7 @@ struct livestockData {
     std::string species;
     int age;
     std::string healthStatus;
-    std::string lastCeckpodate;
+    std::string lastCheckpDate;
 };
 
 void liveStockManager() {
@@ -330,3 +330,34 @@ void liveStockManager() {
     } while (choice !=5);
 }
 
+void addLivestock() {
+    livestockData a;
+    std::cout << "===== ADD LIVESTOCK =====\n";
+    std::cout << "Animal ID: ";
+    std::cin >> a.id;
+    std::cout << "Species (Cattle/Poultry/Swine/Goat/etc.): ";
+    std::cin >> a.species;
+    std::cout << "Age (years): ";
+    std::cin >> a.age;
+    std::cout << "Health Status (Healthy?Sick/Undertreatment): ";
+    std::cin >> a.healthStatus;
+    std::cout << "Last Checkup Date (YYYY-MM-DD): ";
+    std::cin >> a.lastCheckpDate;
+
+    //saves tp to CSV
+    std::ofstream file("livestocl.csv", std::ios::app);
+    if (file.is_open()) {
+        file << a.id << ","
+             << a.species << ","
+             << a.age << ","
+             << a.healthStatus << ","
+             << a.lastCheckpDate << "\n";
+
+        file.close();
+
+        std::cout << "\nCrop added successfully!\n";
+    } else {
+        std::cerr << "\nError: Could not open crops.csv file.\n";
+    }
+}
+    
