@@ -130,7 +130,7 @@ void saveCrops() {
                    << fieldArea[i] + ","
                    << plantingDate[i] + ","
                    << harvestingDate[i] + ","
-                   << growthStage[i] + "\n";
+                   << growthStage[i] + ",";
         } 
         else {
             break;
