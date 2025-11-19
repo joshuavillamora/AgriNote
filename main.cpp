@@ -14,7 +14,7 @@ void updateGrowthStage();
 //Declaring of fucntions for Livestock module
 void livestockManager();
 void addLivestock();
-void viiewLivestck();
+void viewLivestck();
 void deleteLivestock();
 
 
@@ -360,4 +360,41 @@ void addLivestock() {
         std::cerr << "\nError: Could not open crops.csv file.\n";
     }
 }
+
+void viewLivestock() {
+    std::ifstream file("livestock.csv");
+    if (!file.is_open()) {
+        std::cerr << "Error: Couldnot open livestock.csv for reading.\n";
+        return;
+    }
+
+    std::string id, species, age, health, lastCheck;
+     std::cout << "\n------------------------------ LIVESTOCK LIST -----------------------------\n";
+    std::cout << std::left
+              << std::setw(6) << "ID"
+              << std::setw(12) << "species"
+              << std::setw(8) << "Age"
+              << std::setw(18) << "Health Status"
+              << std::setw(15) << "Last Checkup" << "\n";
+    std::cout << "\n----------------------------------------------------------------------\n";
+ 
+    while (file.good()) {
+        std::getline(file, id, ',');
+        std::getline(file, species, ',');
+        std::getline(file, age, ',');
+        std::getline(file, health, ',');
+        std::getline(file, lastCheck, ',');
+
+        if (id.empty()) break;
+
+       std::cout << std::left
+                  << std::setw(6) << id
+                  << std::setw(12) << species
+                  << std::setw(8) << age  
+                  << std::setw(18) << health
+                  << std::setw(15) << lastCheck << "\n";
+    }
+
+    file.close();
+} 
     
