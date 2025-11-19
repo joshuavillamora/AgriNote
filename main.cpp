@@ -5,6 +5,7 @@
 
 // Declaring functions
 void mainMenu(int &choice);
+void openCropFile();
 void cropManager();
 void addCrop();
 void viewCrops();
@@ -28,6 +29,8 @@ std::string harvestingDate[MAX] = {};
 std::string growthStage[MAX] = {};
 
 int main() {
+    openCropFile();
+    
     int choice;
 
     do {
@@ -90,6 +93,28 @@ void mainMenu(int &choice) {
     std::cout << "Choice: ";
     std::cin >> choice;
     std::cout << std::endl;
+}
+
+void openCropFile() {
+    std::string line;
+    std::ifstream myfile("crops.csv");
+    int index = 0;
+
+    if (myfile.is_open()) {
+        while (std::getline(myfile, line)) {
+            std::stringstream ss(line);
+
+            std::getline(ss, fieldId[index], ',');
+            std::getline(ss, crops[index], ',');
+            std::getline(ss, fieldArea[index], ',');
+            std::getline(ss, plantingDate[index], ',');
+            std::getline(ss, harvestingDate[index], ',');
+            std::getline(ss, growthStage[index], ',');
+
+            index++;
+        }
+    }
+    myfile.close();
 }
 
 void cropManager() {
@@ -287,6 +312,8 @@ void deleteCrop() {
         std::cout << "Crop Field ID does not exist!";
     }
 }
+
+
 
 void livestockManager() {
     int choice;
