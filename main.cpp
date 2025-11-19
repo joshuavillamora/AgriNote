@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <vector>
 #include <string>
 #include <iomanip>
 
@@ -124,19 +123,6 @@ void cropManager() {
         std::cout << std::endl;
     } while (choice != 5);
 }
-
-// Stores each crops data
-struct cropData {
-    int id;
-    int area;
-    std::string type;
-    std::string plantingDate;
-    std::string harvestDate;
-    std::string growthStage;
-};
-
-// Stores all crops in memory
-std::vector<cropData> crops;
 
 void addCrop() {
     cropData crop;
