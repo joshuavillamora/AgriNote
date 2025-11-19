@@ -183,6 +183,8 @@ void addCrop() {
 }
 
 void viewCrops() {
+    int rows = 0;
+
     std::cout << "\n------------------------------ CROP LIST -----------------------------\n";
     std::cout << std::left
               << std::setw(5) << "ID"
@@ -201,12 +203,16 @@ void viewCrops() {
                       << std::setw(15) << plantingDate[i]
                       << std::setw(15) << harvestingDate[i]
                       << std::setw(15) << growthStage[i] << "\n";
-        } 
+                      rows++;
+        }
         else {
-            std::cout << "----------------------------------------------------------------------\n";
             break;
         }
     }
+    if (rows == 0) {
+        std::cout << "No records found!\n";
+    }
+    std::cout << "----------------------------------------------------------------------\n";
 }
 
 void updateGrowthStage() {
