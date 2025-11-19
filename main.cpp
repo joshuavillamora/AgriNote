@@ -216,7 +216,31 @@ void viewCrops() {
 }
 
 void updateGrowthStage() {
+    char id[5];
+    char newGrowthStage[50];
+    bool found = false;
+
     
+    std::cin.ignore();
+
+    std::cout << "Enter Crop Field ID to update: ";
+    std::cin.getline(id, 5);
+
+
+    for (int i = 0; i < MAX; i++) {
+        if (id == fieldId[i]) {
+            std::cout << "Current Growth Stage: " << growthStage[i] << "\n";
+            std::cout << "Enter New Growth Stage: ";
+            std::cin.getline(newGrowthStage, 50);
+            growthStage[i] = newGrowthStage;
+            std::cout << "Successfully updated Growth Stage!";
+            found = true;
+        }
+    }
+
+    if (found == false) {
+        std::cout << "Crop Field ID does not exist!";
+    }
 }
 
 void deleteCrop() {
