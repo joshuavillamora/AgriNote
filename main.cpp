@@ -14,7 +14,8 @@ void updateGrowthStage();
 //Declaring of fucntions for Livestock module
 void livestockManager();
 void addLivestock();
-void viewLivestck();
+void viewLivestock();
+void updateLivestock();
 void deleteLivestock();
 
 
@@ -31,7 +32,7 @@ int main() {
                 break;
 
             // Livestock Management
-            case 2:
+            case 2: livestockManager();
                 std::cout << "This is Livestock Management\n"; // temporary, feel free to remove
                 break;
 
@@ -304,7 +305,7 @@ struct livestockData {
     std::string lastCheckupDate;
 };
 
-void liveStockManager() {
+void livestockManager() {
     int choice;
     do {
         std::cout << "===== LIVESTOCK MANAGER =====\n";
@@ -318,10 +319,10 @@ void liveStockManager() {
 
         switch (choice) {
             case 1: addLivestock(); break;
-            case 2: addLivestock(); break;
-            case 3: addLivestock(); break;
-            case 4: addLivestock(); break;
-            case 5: addLivestock(); break;
+            case 2: viewLivestock(); break;
+            case 3: deleteLivestock(); break;
+            case 4: updateGrowthStage(); break;
+            case 5: mainMenu(choice); break;
             default: std::cout << "Please select a valid option (1-5)\n"; break;
 
         }
@@ -331,33 +332,33 @@ void liveStockManager() {
 }
 
 void addLivestock() {
-    livestockData a;
+    livestockData live;
     std::cout << "===== ADD LIVESTOCK =====\n";
     std::cout << "Animal ID: ";
-    std::cin >> a.id;
+    std::cin >> live.id;
     std::cout << "Species (Cattle/Poultry/Swine/Goat/etc.): ";
-    std::cin >> a.species;
+    std::cin >> live.species;
     std::cout << "Age (years): ";
-    std::cin >> a.age;
+    std::cin >> live.age;
     std::cout << "Health Status (Healthy?Sick/Undertreatment): ";
-    std::cin >> a.healthStatus;
+    std::cin >> live.healthStatus;
     std::cout << "Last Checkup Date (YYYY-MM-DD): ";
-    std::cin >> a.lastCheckupDate;
+    std::cin >> live.lastCheckupDate;
 
     //saves tp to CSV
-    std::ofstream file("livestocl.csv", std::ios::app);
+    std::ofstream file("livestock.csv", std::ios::app);
     if (file.is_open()) {
-        file << a.id << ","
-             << a.species << ","
-             << a.age << ","
-             << a.healthStatus << ","
-             << a.lastCheckupDate << "\n";
+        file << live.id << ","
+             << live.species << ","
+             << live.age << ","
+             << live.healthStatus << ","
+             << live.lastCheckupDate << "\n";
 
         file.close();
 
         std::cout << "\nCrop added successfully!\n";
     } else {
-        std::cerr << "\nError: Could not open crops.csv file.\n";
+        std::cerr << "\nError: Could not open livestock.csv file.\n";
     }
 }
 
@@ -416,13 +417,13 @@ void updateLivestockHealth() {
         std::getline(file, lastCheck, ',');
 
         if (id.empty()) continue;
-        livestockData a;
-        a.id = std::stoi(id);
-        a.species = species;
-        a.age = std::stoi(age);
-        a.healthStatus = health;
-        a.lastCheckupDate = lastCheck;
-        list.push_back(a);
+        livestockData live;
+        live.id = std::stoi(id);
+        live.species = species;
+        live.age = std::stoi(age);
+        live.healthStatus = health;
+        live.lastCheckupDate = lastCheck;
+        list.push_back(live);
     }  
     file.close();
 
@@ -431,14 +432,14 @@ void updateLivestockHealth() {
     std::cin >> searchId;
 
     bool found = false;
-    for (auto &a : list) {
-        if (a.id == searchId) {
+    for (auto &live : list) {
+        if (live.id == searchId) {
         found = true;
-        std::cout << "Current health status: " << a.healthStatus << "\n";
+        std::cout << "Current health status: " << live.healthStatus << "\n";
         std::cout << "Enter a new health status";
-        std::cin >> a.healthStatus;
+        std::cin >> live.healthStatus;
         std::cout << "Enter last checkup date (YYYY-MM-DD): ";
-        std::cin >> a.lastCheckupDate;
+        std::cin >> live.lastCheckupDate;
         break;
         }
     }
@@ -450,8 +451,8 @@ void updateLivestockHealth() {
 
     //Overwrites the file(csv) with updated dats
     std::ofstream out("livestock.csv", std::ios::trunc);
-        for (auto &a : list) {
-    out << a.id << "," << a.species << "," << a.age << "," << a.healthStatus << "," << a.lastCheckupDate << "\n";
+        for (auto &live : list) {
+    out << live.id << "," << live.species << "," << live.age << "," << live.healthStatus << "," << live.lastCheckupDate << "\n";
 
     }
     out.close();
