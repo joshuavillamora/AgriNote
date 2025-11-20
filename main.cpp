@@ -394,3 +394,168 @@ void updateLivestockHealth() {
 void deleteLivestock() {
     
 }
+
+
+
+
+
+
+
+
+
+
+const int MAX_ITEMS = 100;
+
+std::string itemName[MAX_ITEMS];
+int itemQty[MAX_ITEMS];
+double itemPrice[MAX_ITEMS];
+int totalItems = 0;
+
+void loadInventory();
+void saveInventory();
+void addItem();
+void updateItem();
+void viewItem();
+
+int main () {
+    loadInventory();
+
+    int choice;
+
+    do {
+        std::cout << "\n===== INVENTORY MANAGER =====\n";
+        std::cout << "1. Add Inventory Item\n";
+        std::cout << "2. View All Items\n";
+        std::cout << "3. Update Stock Quantity\n";
+        std::cout << "4. Exit\n";
+        std::cout << "Choose an Option: ";
+        std::cin >> choice;
+
+        if (std::cin.fail ()) {
+            std::cin.clear ();
+            std::cin.ignore(1000, '\n');
+            std::cout << "\nInvalid input! Please enter a number.\n";
+            continue;
+        }
+
+        switch (choice) {
+            case 1: addItem ();
+            break;
+
+            case 2: viewItem ();
+            break;
+
+            case 3: updateItem ();
+            break;
+
+            case 4: std::cout << "Exiting program. Goodbye!\n";
+            break;
+
+            default: std::cout << "Invalid choice!\n";
+        }
+
+    } while (choice !=4);
+    return 0;
+}
+
+void loadInventory() {
+    std::ifstream file ("inventory.csv");
+    
+    if (!file.is_open())
+        return;
+
+    while (!file.eof() && totalItems < MAX_ITEMS) {
+        std::getline(file, itemName[totalItems]);
+        if (itemName[totalItems].empty())
+        break;
+
+        file >> itemQty[totalItems];
+        file >> itemPrice[totalItems];
+        file.ignore();
+
+        totalItems++;
+    }
+    file.close();
+}
+
+void saveInventory() {
+    std::ofstream file ("inventory.csv");
+    for (int i = 0; i < totalItems; i++){
+        file << itemName[i] << "\n";
+        file << itemQty[i] << "\n";
+        file << itemPrice[i] << "\n";
+    }
+    file.close();
+}
+
+void addItem() {
+    if (totalItems >= MAX_ITEMS) {
+        std::cout << "\nInventory is full! Cannot add more items.\n";
+        return;
+    }
+    std::cin.ignore();
+
+    std::cout << "\nEnter item name: ";
+    std::getline(std::cin, itemName[totalItems]);
+
+    std::cout << "Enter quantity: ";
+    std:: cin >> itemQty[totalItems];
+
+    std::cout << "Enter price per unit: ";
+    std::cin >> itemPrice[totalItems];
+
+    totalItems++;
+    saveInventory();
+    
+    std::cout << "\nItem added successfully!\n";
+}
+
+void viewItem() {
+    if (totalItems == 0) {
+        std::cout << "\nNo items in inventory.\n";
+        return;
+    }
+
+    double totalValue = 0;
+
+    std::cout << "\n------------------------------ INVENTORY LIST -----------------------------\n";
+    for (int i = 0; i < totalItems; i++) {
+        std::cout << i + 1 << ". " << itemName[i] << " | Qty: " << itemQty[i] << " | Price: " << itemPrice[i] << "\n";
+
+        totalValue += itemQty[i] * itemPrice[i];
+    }
+    std::cout << "\nTotal Inventory Value:  PHP" << totalValue << "\n";
+}
+
+void updateItem() {
+    if (totalItems == 0) {
+        std::cout << "\nNo items available to update.\n";
+        return;
+    }
+
+    int itemNum;
+    std::cout << "\nEnter item number to update (1-" << totalItems << "): ";
+    std::cin >> itemNum;
+
+    if (itemNum < 1 || itemNum > totalItems) {
+        std::cout << "\nInvalid item number!\n";
+        return;
+    }
+
+    int index = itemNum - 1;
+    int change;
+
+    std::cout << "\nCurrent quantity: " << itemQty[index] << "\n";
+    std::cout << "Enter quantity to add (+) or subtract (-): ";
+    std::cin >> change;
+
+    if (change < 0 && -change > itemQty[index]) {
+        std::cout << "\nError! Cannot subtract more than the current quantity (" << itemQty[index] << ").\n";
+        return;
+    }
+    itemQty[index] += change;
+
+    saveInventory();
+
+    std::cout << "\nStock updated successfully!\n";
+}
