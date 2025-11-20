@@ -14,12 +14,22 @@ void viewCrops();
 void updateGrowthStage();
 void deleteCrop();
 
-//Declaring of fucntions for Livestock module
+// Livestock functions
+void loadLivestock();
+void saveLivestock();
 void livestockManager();
 void addLivestock();
 void viewLivestock();
 void updateLivestock();
 void deleteLivestock();
+
+void inventoryManager();
+void loadInventory();
+void saveInventory();
+void addItem();
+void updateItem();
+void viewItem();
+
 
 const int MAX = 50; // amount of rows
 
@@ -29,6 +39,14 @@ std::string fieldArea[MAX] = {};
 std::string plantingDate[MAX] = {};
 std::string harvestingDate[MAX] = {};
 std::string growthStage[MAX] = {};
+
+// Livestock Arrays
+std::string animalId[MAX] = {};
+std::string species[MAX] = {};
+std::string age[MAX] = {};
+std::string healthStatus[MAX] = {};
+std::string lastCheckup[MAX] = {};
+
 
 int main() {
     loadCrops();
@@ -50,7 +68,7 @@ int main() {
                 break;
 
             // Inventory Management
-            case 3:
+            case 3: loadInventory();
                 std::cout << "This is Inventory Management\n"; // temporary, feel free to remove
                 break;
 
@@ -337,6 +355,43 @@ void deleteCrop() {
 }
 
 
+void loadLivestock() {
+    std::string line;
+    std::ifstream file("livestock.csv");
+    int index = 0;
+
+    if (file.is_open()) {
+        while (std::getline(file, line)) {
+            std::stringstream ss(line);
+
+            std::getline(ss, animalId[index], ',');
+            std::getline(ss, species[index], ',');
+            std::getline(ss, age[index], ',');
+            std::getline(ss, healthStatus[index], ',');
+            std::getline(ss, lastCheckup[index], ',');
+
+            index++;
+        }
+    }
+    file.close();
+}
+
+void saveLivestock() {
+    std::ofstream file("livestock.csv");
+
+    for (int i = 0; i < MAX; i++) {
+        if (animalId[i] != "\0") {
+            file << animalId[i] << ","
+                 << species[i] << ","
+                 << age[i] << ","
+                 << healthStatus[i] << ","
+                 << lastCheckup[i] << "\n";
+        } else {
+            break;
+        }
+    }
+    file.close();
+}
 
 void livestockManager() {
     int choice;
@@ -353,55 +408,161 @@ void livestockManager() {
         switch (choice) {
             case 1: addLivestock(); break;
             case 2: viewLivestock(); break;
-            case 3: deleteLivestock(); break;
-            case 4: updateGrowthStage(); break;
-            case 5: mainMenu(choice); break;
-            default: std::cout << "Please select a valid option (1-5)\n"; break;
-
+            case 3: updateLivestock(); break;
+            case 4: deleteLivestock(); break;
+            case 5: return;
+            default: std::cout << "Please select a valid option (1-5)\n";
         }
 
-        std::cout <<std::endl;
-    } while (choice !=5);
+        saveLivestock();
+        std::cout << std::endl;
+
+    } while (choice != 5);
 }
 
 void addLivestock() {
+    const int SIZE = 30;
+    char id[SIZE], sp[SIZE], a[SIZE], health[SIZE], checkup[SIZE];
+
+    std::cin.ignore(); // important: clear leftover newline
+
     std::cout << "===== ADD LIVESTOCK =====\n";
     std::cout << "Animal ID: ";
-    std::cout << "Species (Cattle/Poultry/Swine/Goat/etc.): ";
+    std::cin.getline(id, SIZE);
+
+    std::cout << "Species (Cattle/Goat/Swine/etc.): ";
+    std::cin.getline(sp, SIZE);
+
     std::cout << "Age (years): ";
-    std::cout << "Health Status (Healthy?Sick/Undertreatment): ";
+    std::cin.getline(a, SIZE);
+
+    std::cout << "Health Status: ";
+    std::cin.getline(health, SIZE);
+
     std::cout << "Last Checkup Date (YYYY-MM-DD): ";
+    std::cin.getline(checkup, SIZE);
+
+    for (int i = 0; i < MAX; i++) {
+        if (animalId[i] == "\0") {
+            animalId[i] = id;
+            species[i] = sp;
+            age[i] = a;
+            healthStatus[i] = health;
+            lastCheckup[i] = checkup;
+            break;
+        }
+    }
+
+    std::cout << "Livestock successfully added!\n";
 }
 
 void viewLivestock() {
-     std::cout << "\n------------------------------ LIVESTOCK LIST -----------------------------\n";
+    int rows = 0;
+
+    std::cout << "\n---------------------------- LIVESTOCK LIST ----------------------------\n";
     std::cout << std::left
-              << std::setw(6) << "ID"
-              << std::setw(12) << "species"
+              << std::setw(8) << "ID"
+              << std::setw(15) << "Species"
               << std::setw(8) << "Age"
-              << std::setw(18) << "Health Status"
-              << std::setw(15) << "Last Checkup" << "\n";
-    std::cout << "\n----------------------------------------------------------------------\n";
+              << std::setw(20) << "Health Status"
+              << std::setw(15) << "Last Checkup\n";
+    std::cout << "------------------------------------------------------------------------\n";
+
+    for (int i = 0; i < MAX; i++) {
+        if (animalId[i] != "\0") {
+            std::cout << std::left
+                      << std::setw(8) << animalId[i]
+                      << std::setw(15) << species[i]
+                      << std::setw(8) << age[i]
+                      << std::setw(20) << healthStatus[i]
+                      << std::setw(15) << lastCheckup[i] << "\n";
+            rows++;
+        }
+        else break;
+    }
+
+    if (rows == 0) {
+        std::cout << "No livestock records found!\n";
+    }
+
+    std::cout << "------------------------------------------------------------------------\n";
 }
- 
 
-void updateLivestockHealth() {
+void updateLivestock() {
+    char id[10];
+    char newHealth[50];
+    char newCheckup[20];
+    bool found = false;
 
+    std::cin.ignore();
+
+    std::cout << "Enter Animal ID to update: ";
+    std::cin.getline(id, 10);
+
+    for (int i = 0; i < MAX; i++) {
+        if (animalId[i] == id) {
+            std::cout << "Current Health: " << healthStatus[i] << "\n";
+            std::cout << "New Health Status: ";
+            std::cin.getline(newHealth, 50);
+
+            std::cout << "New Last Checkup Date: ";
+            std::cin.getline(newCheckup, 20);
+
+            healthStatus[i] = newHealth;
+            lastCheckup[i] = newCheckup;
+
+            std::cout << "Livestock updated successfully!\n";
+            found = true;
+        }
+    }
+
+    if (!found) {
+        std::cout << "Animal ID does not exist!\n";
+    }
 }
-
-
 
 void deleteLivestock() {
-    
+    char id[10];
+    char ans;
+    bool found = false;
+
+    std::cin.ignore();
+
+    std::cout << "Enter Animal ID to delete: ";
+    std::cin.getline(id, 10);
+
+    for (int i = 0; i < MAX; i++) {
+        if (animalId[i] == id) {
+
+            // Show record
+            std::cout << "\n--- RECORD FOUND ---\n";
+            std::cout << "ID: " << animalId[i] << "\n";
+            std::cout << "Species: " << species[i] << "\n";
+            std::cout << "Age: " << age[i] << "\n";
+            std::cout << "Health: " << healthStatus[i] << "\n";
+            std::cout << "Checkup: " << lastCheckup[i] << "\n";
+
+            std::cout << "Delete this livestock? (Y/N): ";
+            std::cin >> ans;
+
+            if (ans == 'Y' || ans == 'y') {
+                animalId[i] = "";
+                species[i] = "";
+                age[i] = "";
+                healthStatus[i] = "";
+                lastCheckup[i] = "";
+
+                std::cout << "Livestock removed successfully!\n";
+            }
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        std::cout << "Animal ID does not exist!\n";
+    }
 }
-
-
-
-
-
-
-
-
 
 
 const int MAX_ITEMS = 100;
@@ -411,15 +572,9 @@ int itemQty[MAX_ITEMS];
 double itemPrice[MAX_ITEMS];
 int totalItems = 0;
 
-void loadInventory();
-void saveInventory();
-void addItem();
-void updateItem();
-void viewItem();
 
-int main () {
-    loadInventory();
 
+    void inventoryManager(){ 
     int choice;
 
     do {
@@ -455,7 +610,6 @@ int main () {
         }
 
     } while (choice !=4);
-    return 0;
 }
 
 void loadInventory() {
