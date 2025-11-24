@@ -23,12 +23,29 @@ void viewLivestock();
 void updateLivestock();
 void deleteLivestock();
 
+//Fucntions for Inventory
 void inventoryManager();
 void loadInventory();
 void saveInventory();
 void addItem();
+void viewInventory();
 void updateItem();
-void viewItem();
+void deleteItem();
+
+//Finance Functions
+void financeManager();
+void loadFinance();
+void saveFinance();
+void addFinance();
+void viewFinance();
+void updateFinance();
+void deleteFinance();
+
+
+// System overview
+void systemOverview();
+
+
 
 
 const int MAX = 50; // amount of rows
@@ -47,10 +64,26 @@ std::string age[MAX] = {};
 std::string healthStatus[MAX] = {};
 std::string lastCheckup[MAX] = {};
 
+//Inventory arrays
+std::string itemName[MAX] = {};
+std::string itemCategory[MAX] = {};
+std::string itemQuantity[MAX] = {};
+std::string itemPrice[MAX] = {};
+int totalItems = 0;
+
+//Finance arrays
+std::string finType[MAX];      // Income or Expense
+std::string finDesc[MAX];      // Description
+double finAmount[MAX];         // Amount
+std::string finDate[MAX];      // YYYY-MM-DD
+int totalFinance = 0;
+
+
+
+
 
 int main() {
-    loadCrops();
-
+ 
     int choice;
 
     do {
@@ -64,22 +97,18 @@ int main() {
 
             // Livestock Management
             case 2: livestockManager();
-                std::cout << "This is Livestock Management\n"; // temporary, feel free to remove
                 break;
 
             // Inventory Management
-            case 3: loadInventory();
-                std::cout << "This is Inventory Management\n"; // temporary, feel free to remove
+            case 3: inventoryManager();
                 break;
 
             // Financial Management
-            case 4:
-                std::cout << "This is Financial Management\n"; // temporary, feel free to remove
+            case 4: financeManager(); 
                 break;
                 
             // System Overview
-            case 5:
-                std::cout << "This is System Overview\n"; // temporary, feel free to remove
+            case 5: systemOverview();
                 break;
 
             // Exit Main Menu
@@ -565,151 +594,443 @@ void deleteLivestock() {
 }
 
 
-const int MAX_ITEMS = 100;
 
-std::string itemName[MAX_ITEMS];
-int itemQty[MAX_ITEMS];
-double itemPrice[MAX_ITEMS];
-int totalItems = 0;
-
-
-
-    void inventoryManager(){ 
-    int choice;
-
-    do {
-        std::cout << "\n===== INVENTORY MANAGER =====\n";
-        std::cout << "1. Add Inventory Item\n";
-        std::cout << "2. View All Items\n";
-        std::cout << "3. Update Stock Quantity\n";
-        std::cout << "4. Exit\n";
-        std::cout << "Choose an Option: ";
-        std::cin >> choice;
-
-        if (std::cin.fail ()) {
-            std::cin.clear ();
-            std::cin.ignore(1000, '\n');
-            std::cout << "\nInvalid input! Please enter a number.\n";
-            continue;
-        }
-
-        switch (choice) {
-            case 1: addItem ();
-            break;
-
-            case 2: viewItem ();
-            break;
-
-            case 3: updateItem ();
-            break;
-
-            case 4: std::cout << "Exiting program. Goodbye!\n";
-            break;
-
-            default: std::cout << "Invalid choice!\n";
-        }
-
-    } while (choice !=4);
-}
-
+//                  INVENTORY MANAGER
 void loadInventory() {
-    std::ifstream file ("inventory.csv");
-    
-    if (!file.is_open())
-        return;
+    std::ifstream file("inventory.csv");
+    std::string line;
+    int index = 0;
 
-    while (!file.eof() && totalItems < MAX_ITEMS) {
-        std::getline(file, itemName[totalItems]);
-        if (itemName[totalItems].empty())
-        break;
+    if (file.is_open()) {
+        while (std::getline(file, line)) {
+            std::stringstream ss(line);
 
-        file >> itemQty[totalItems];
-        file >> itemPrice[totalItems];
-        file.ignore();
+            std::getline(ss, itemName[index], ',');
+            std::getline(ss, itemCategory[index], ',');
+            std::getline(ss, itemQuantity[index], ',');
+            std::getline(ss, itemPrice[index], ',');
 
-        totalItems++;
+            index++;
+        }
     }
     file.close();
 }
 
 void saveInventory() {
-    std::ofstream file ("inventory.csv");
-    for (int i = 0; i < totalItems; i++){
-        file << itemName[i] << "\n";
-        file << itemQty[i] << "\n";
-        file << itemPrice[i] << "\n";
+    std::ofstream file("inventory.csv");
+
+    for (int i = 0; i < MAX; i++) {
+        if (itemName[i] != "\0") {
+            file << itemName[i] << ","
+                 << itemCategory[i] << ","
+                 << itemQuantity[i] << ","
+                 << itemPrice[i] << "\n";
+        }
+        else break;
     }
+
     file.close();
 }
 
+void inventoryManager() {
+    int choice;
+
+    do {
+        std::cout << "===== INVENTORY MANAGER =====\n";
+        std::cout << "1. Add Inventory Item\n";
+        std::cout << "2. View Inventory\n";
+        std::cout << "3. Edit Inventory Item\n";
+        std::cout << "4. Delete Inventory Item\n";
+        std::cout << "5. Back to Main Menu\n";
+        std::cout << "Choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1: addItem(); break;
+            case 2: viewInventory(); break;
+            case 3: updateItem(); break;
+            case 4: deleteItem(); break;
+            case 5: mainMenu(choice); break;
+            default: std::cout << "Invalid choice.\n"; break;
+        }
+
+        saveInventory();
+        std::cout << std::endl;
+
+    } while (choice != 5);
+}
+
+
+//                ADD INVENTORY ITEM
 void addItem() {
-    if (totalItems >= MAX_ITEMS) {
-        std::cout << "\nInventory is full! Cannot add more items.\n";
-        return;
-    }
+const int SIZE = 50;
+char name[SIZE], category[SIZE], qty[SIZE], price[SIZE];
+
     std::cin.ignore();
 
-    std::cout << "\nEnter item name: ";
-    std::getline(std::cin, itemName[totalItems]);
+    std::cout << "===== ADD INVENTORY ITEM =====\n";
+    std::cout << "Item Name: ";
+    std::cin.getline(name, SIZE);
 
-    std::cout << "Enter quantity: ";
-    std:: cin >> itemQty[totalItems];
+    std::cout << "Category: ";
+    std::cin.getline(category, SIZE);
 
-    std::cout << "Enter price per unit: ";
-    std::cin >> itemPrice[totalItems];
+    std::cout << "Quantity: ";
+    std::cin.getline(qty, SIZE);
 
-    totalItems++;
-    saveInventory();
-    
-    std::cout << "\nItem added successfully!\n";
-}
+    std::cout << "Price: ";
+    std::cin.getline(price, SIZE);
 
-void viewItem() {
-    if (totalItems == 0) {
-        std::cout << "\nNo items in inventory.\n";
-        return;
+    for (int i = 0; i < MAX; i++) {
+    if (itemName[i] == "\0") {
+        itemName[i] = name;
+        itemCategory[i] = category;
+        itemQuantity[i] = qty;
+        itemPrice[i] = price;
+        totalItems++; // Update total items
+        std::cout << "Item added successfully!\n";
+        break;
+        }
     }
 
-    double totalValue = 0;
-
-    std::cout << "\n------------------------------ INVENTORY LIST -----------------------------\n";
-    for (int i = 0; i < totalItems; i++) {
-        std::cout << i + 1 << ". " << itemName[i] << " | Qty: " << itemQty[i] << " | Price: " << itemPrice[i] << "\n";
-
-        totalValue += itemQty[i] * itemPrice[i];
-    }
-    std::cout << "\nTotal Inventory Value:  PHP" << totalValue << "\n";
 }
 
+
+//VIEW INVENTORY
+void viewInventory() {
+    int rows = 0;
+
+    std::cout << "\n------------------------------ INVENTORY LIST ------------------------------\n";
+    std::cout << std::left
+              << std::setw(20) << "Name"
+              << std::setw(15) << "Category"
+              << std::setw(10) << "Quantity"
+              << std::setw(10) << "Price\n";
+    std::cout << "---------------------------------------------------------------------------\n";
+
+    for (int i = 0; i < MAX; i++) {
+        if (itemName[i] != "\0") {
+            std::cout << std::left
+                      << std::setw(20) << itemName[i]
+                      << std::setw(15) << itemCategory[i]
+                      << std::setw(10) << itemQuantity[i]
+                      << std::setw(10) << itemPrice[i] << "\n";
+            rows++;
+        }
+        else break;
+    }
+
+    if (rows == 0)
+        std::cout << "No inventory items found.\n";
+
+    std::cout << "---------------------------------------------------------------------------\n";
+}
+
+
+//EDIT INVENTORY ITEM
 void updateItem() {
-    if (totalItems == 0) {
-        std::cout << "\nNo items available to update.\n";
+    char name[50];
+    bool found = false;
+
+    std::cin.ignore();
+
+    std::cout << "Enter Item Name to edit: ";
+    std::cin.getline(name, 50);
+
+    for (int i = 0; i < MAX; i++) {
+        if (itemName[i] == name) {
+            char newQty[20];
+            char newPrice[20];
+
+            std::cout << "Current Quantity: " << itemQuantity[i] << "\n";
+            std::cout << "New Quantity: ";
+            std::cin.getline(newQty, 20);
+
+            std::cout << "Current Price: " << itemPrice[i] << "\n";
+            std::cout << "New Price: ";
+            std::cin.getline(newPrice, 20);
+
+            itemQuantity[i] = newQty;
+            itemPrice[i] = newPrice;
+
+            std::cout << "Item updated successfully!\n";
+            found = true;
+        }
+    }
+
+    if (!found)
+        std::cout << "Item not found!\n";
+}
+
+//DELETE INVENTORY ITEM
+void deleteItem() {
+char name[50];
+bool found = false;
+
+std::cin.ignore();
+
+std::cout << "Enter Item Name to delete: ";
+std::cin.getline(name, 50);
+
+for (int i = 0; i < MAX; i++) {
+    if (itemName[i] == name) {
+
+        std::cout << "Deleting: " << itemName[i] << "\n";
+
+        // Clears row
+        itemName[i] = "";
+        itemCategory[i] = "";
+        itemQuantity[i] = "";
+        itemPrice[i] = "";
+
+        // Shift remaining items up
+        for (int j = i; j < MAX - 1; j++) {
+            itemName[j] = itemName[j + 1];
+            itemCategory[j] = itemCategory[j + 1];
+            itemQuantity[j] = itemQuantity[j + 1];
+            itemPrice[j] = itemPrice[j + 1];
+        }
+
+        totalItems--; // Update total items
+        std::cout << "Item removed successfully!\n";
+        found = true;
+        break;
+    }
+}
+
+if (!found)
+    std::cout << "Item not found!\n";
+
+}
+
+
+void financeManager() {
+    int choice;
+
+    do {
+        std::cout << "\n===== FINANCE MANAGER =====\n";
+        std::cout << "1. Add Record\n";
+        std::cout << "2. View Records\n";
+        std::cout << "3. Update Record\n";
+        std::cout << "4. Delete Record\n";
+        std::cout << "5. Back to Main Menu\n";
+        std::cout << "Choice: ";
+        std::cin >> choice;
+
+        if (std::cin.fail()) {
+            std::cin.clear();
+            std::cin.ignore(1000, '\n');
+            std::cout << "Invalid input!\n";
+            continue;
+        }
+
+        switch (choice) {
+            case 1: addFinance(); break;
+            case 2: viewFinance(); break;
+            case 3: updateFinance(); break;
+            case 4: deleteFinance(); break;
+            case 5: return;
+            default: std::cout << "Invalid option!\n";
+        }
+
+        saveFinance();
+
+    } while (choice != 5);
+}
+
+void loadFinance() {
+    std::ifstream file("finance.csv");
+
+    if (!file.is_open())
+        return;
+
+    totalFinance = 0;
+
+    while (!file.eof() && totalFinance < MAX) {
+        std::getline(file, finType[totalFinance], ',');
+        if (finType[totalFinance].empty()) break;
+
+        std::getline(file, finDesc[totalFinance], ',');
+        file >> finAmount[totalFinance];
+        file.ignore();
+        std::getline(file, finDate[totalFinance]);
+
+        totalFinance++;
+    }
+
+    file.close();
+}
+
+void saveFinance() {
+    std::ofstream file("finance.csv");
+
+    for (int i = 0; i < totalFinance; i++) {
+        file << finType[i] << ","
+             << finDesc[i] << ","
+             << finAmount[i] << "\n"
+             << finDate[i] << "\n";
+    }
+
+    file.close();
+}
+
+void addFinance() {
+    if (totalFinance >= MAX) {
+        std::cout << "Finance log full!\n";
         return;
     }
 
-    int itemNum;
-    std::cout << "\nEnter item number to update (1-" << totalItems << "): ";
-    std::cin >> itemNum;
+    std::cin.ignore();
 
-    if (itemNum < 1 || itemNum > totalItems) {
-        std::cout << "\nInvalid item number!\n";
+    std::cout << "\nEnter Type (Income/Expense): ";
+    std::getline(std::cin, finType[totalFinance]);
+
+    std::cout << "Description: ";
+    std::getline(std::cin, finDesc[totalFinance]);
+
+    std::cout << "Amount: ";
+    std::cin >> finAmount[totalFinance];
+    std::cin.ignore();
+
+    std::cout << "Date (YYYY-MM-DD): ";
+    std::getline(std::cin, finDate[totalFinance]);
+
+    totalFinance++;
+    std::cout << "Record added!\n";
+}
+
+void viewFinance() {
+    if (totalFinance == 0) {
+        std::cout << "No finance records!\n";
         return;
     }
 
-    int index = itemNum - 1;
-    int change;
+    double net = 0;
 
-    std::cout << "\nCurrent quantity: " << itemQty[index] << "\n";
-    std::cout << "Enter quantity to add (+) or subtract (-): ";
-    std::cin >> change;
+    std::cout << "\n-------- FINANCE RECORDS --------\n";
 
-    if (change < 0 && -change > itemQty[index]) {
-        std::cout << "\nError! Cannot subtract more than the current quantity (" << itemQty[index] << ").\n";
+    for (int i = 0; i < totalFinance; i++) {
+        std::cout << i + 1 << ". "
+                  << finType[i] << " | "
+                  << finDesc[i] << " | "
+                  << "PHP " << finAmount[i] << " | "
+                  << finDate[i] << "\n";
+
+        if (finType[i] == "Income" || finType[i] == "income")
+            net += finAmount[i];
+        else
+            net -= finAmount[i];
+    }
+
+    std::cout << "\nNet Balance: PHP " << net << "\n";
+}
+
+void updateFinance() {
+    if (totalFinance == 0) {
+        std::cout << "Nothing to update.\n";
         return;
     }
-    itemQty[index] += change;
 
-    saveInventory();
+    int n;
+    std::cout << "Enter record number: ";
+    std::cin >> n;
 
-    std::cout << "\nStock updated successfully!\n";
+    if (n < 1 || n > totalFinance) {
+        std::cout << "Invalid!\n";
+        return;
+    }
+
+    int idx = n - 1;
+    std::cin.ignore();
+
+    std::cout << "New Type: ";
+    std::getline(std::cin, finType[idx]);
+
+    std::cout << "New Description: ";
+    std::getline(std::cin, finDesc[idx]);
+
+    std::cout << "New Amount: ";
+    std::cin >> finAmount[idx];
+    std::cin.ignore();
+
+    std::cout << "New Date: ";
+    std::getline(std::cin, finDate[idx]);
+
+    std::cout << "Updated!\n";
+}
+
+void deleteFinance() {
+    if (totalFinance == 0) {
+        std::cout << "No records to delete.\n";
+        return;
+    }
+
+    int n;
+    std::cout << "Enter record number to delete: ";
+    std::cin >> n;
+
+    if (n < 1 || n > totalFinance) {
+        std::cout << "Invalid!\n";
+        return;
+    }
+
+    int idx = n - 1;
+
+    for (int i = idx; i < totalFinance - 1; i++) {
+        finType[i] = finType[i+1];
+        finDesc[i] = finDesc[i+1];
+        finAmount[i] = finAmount[i+1];
+        finDate[i] = finDate[i+1];
+    }
+
+    totalFinance--;
+
+    std::cout << "Record deleted!\n";
+}
+
+void systemOverview() {
+int cropCount = 0;
+int livestockCount = 0;
+double inventoryValue = 0;
+double netFinance = 0;
+
+// Count crops and livestock
+for (int i = 0; i < MAX; i++) {
+    if (fieldId[i] != "\0") cropCount++;
+    if (animalId[i] != "\0") livestockCount++;
+}
+
+// Compute inventory value 
+for (int i = 0; i < totalItems; i++) {
+    int qty = 0;
+    double price = 0;
+
+    if (!itemQuantity[i].empty()) {
+        std::stringstream ssQty(itemQuantity[i]);
+        ssQty >> qty;
+    }
+
+    if (!itemPrice[i].empty()) {
+        std::stringstream ssPrice(itemPrice[i]);
+        ssPrice >> price;
+    }
+
+    inventoryValue += qty * price;
+}
+
+// Compute net finance
+for (int i = 0; i < totalFinance; i++) {
+    if (finType[i] == "Income" || finType[i] == "income")
+        netFinance += finAmount[i];
+    else
+        netFinance -= finAmount[i];
+}
+
+std::cout << "\n========= SYSTEM OVERVIEW =========\n";
+std::cout << "Total Crop Records:      " << cropCount << "\n";
+std::cout << "Total Livestock Records: " << livestockCount << "\n";
+std::cout << "Total Inventory Value:   PHP " << inventoryValue << "\n";
+std::cout << "Net Finance Balance:     PHP " << netFinance << "\n";
+std::cout << "===================================\n";
+
 }
