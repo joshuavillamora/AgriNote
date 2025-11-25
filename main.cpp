@@ -96,19 +96,23 @@ int main() {
                 break;
 
             // Livestock Management
-            case 2: livestockManager();
+            case 2: 
+                livestockManager();
                 break;
 
             // Inventory Management
-            case 3: inventoryManager();
+            case 3: 
+                inventoryManager();
                 break;
 
             // Financial Management
-            case 4: financeManager(); 
+            case 4: 
+                financeManager(); 
                 break;
                 
             // System Overview
-            case 5: systemOverview();
+            case 5: 
+                systemOverview();
                 break;
 
             // Exit Main Menu
@@ -222,7 +226,7 @@ void cropManager() {
 
             // Exit to Main Menu
             case 5: 
-                mainMenu(choice);
+                return;
                 break;
 
             default:
@@ -343,12 +347,10 @@ void deleteCrop() {
     char answer;
     bool found = false;
 
-    
     std::cin.ignore();
 
     std::cout << "Enter Crop Field ID to delete: ";
     std::cin.getline(id, 5);
-
 
     for (int i = 0; i < MAX; i++) {
         if (id == fieldId[i]) {
@@ -383,6 +385,7 @@ void deleteCrop() {
     }
 }
 
+// LIVESTOCK MANAGER
 
 void loadLivestock() {
     std::string line;
@@ -435,12 +438,23 @@ void livestockManager() {
         std::cin >> choice;
 
         switch (choice) {
-            case 1: addLivestock(); break;
-            case 2: viewLivestock(); break;
-            case 3: updateLivestock(); break;
-            case 4: deleteLivestock(); break;
-            case 5: return;
-            default: std::cout << "Please select a valid option (1-5)\n";
+            case 1: 
+                addLivestock();
+                break;
+            case 2: 
+                viewLivestock(); 
+                break;
+            case 3: 
+                updateLivestock(); 
+                break;
+            case 4: 
+                deleteLivestock(); 
+                break;
+            case 5: 
+                return; 
+            default: 
+                std::cout << "Please select a valid option (1-5)\n"; 
+                break;
         }
 
         saveLivestock();
@@ -562,7 +576,6 @@ void deleteLivestock() {
 
     for (int i = 0; i < MAX; i++) {
         if (animalId[i] == id) {
-
             // Show record
             std::cout << "\n--- RECORD FOUND ---\n";
             std::cout << "ID: " << animalId[i] << "\n";
@@ -646,12 +659,24 @@ void inventoryManager() {
         std::cin >> choice;
 
         switch (choice) {
-            case 1: addItem(); break;
-            case 2: viewInventory(); break;
-            case 3: updateItem(); break;
-            case 4: deleteItem(); break;
-            case 5: mainMenu(choice); break;
-            default: std::cout << "Invalid choice.\n"; break;
+            case 1: 
+                addItem(); 
+                break;
+            case 2: 
+                viewInventory(); 
+                break;
+            case 3: 
+                updateItem(); 
+                break;
+            case 4: 
+                deleteItem(); 
+                break;
+            case 5: 
+                return; 
+                break;
+            default: 
+                std::cout << "Invalid choice.\n"; 
+                break;
         }
 
         saveInventory();
@@ -663,8 +688,8 @@ void inventoryManager() {
 
 //                ADD INVENTORY ITEM
 void addItem() {
-const int SIZE = 50;
-char name[SIZE], category[SIZE], qty[SIZE], price[SIZE];
+    const int SIZE = 50;
+    char name[SIZE], category[SIZE], qty[SIZE], price[SIZE];
 
     std::cin.ignore();
 
@@ -682,14 +707,14 @@ char name[SIZE], category[SIZE], qty[SIZE], price[SIZE];
     std::cin.getline(price, SIZE);
 
     for (int i = 0; i < MAX; i++) {
-    if (itemName[i] == "\0") {
-        itemName[i] = name;
-        itemCategory[i] = category;
-        itemQuantity[i] = qty;
-        itemPrice[i] = price;
-        totalItems++; // Update total items
-        std::cout << "Item added successfully!\n";
-        break;
+        if (itemName[i] == "\0") {
+            itemName[i] = name;
+            itemCategory[i] = category;
+            itemQuantity[i] = qty;
+            itemPrice[i] = price;
+            totalItems++; // Update total items
+            std::cout << "Item added successfully!\n";
+            break;
         }
     }
 
@@ -720,8 +745,9 @@ void viewInventory() {
         else break;
     }
 
-    if (rows == 0)
+    if (rows == 0) {
         std::cout << "No inventory items found.\n";
+    }
 
     std::cout << "---------------------------------------------------------------------------\n";
 }
@@ -758,51 +784,51 @@ void updateItem() {
         }
     }
 
-    if (!found)
+    if (!found) {
         std::cout << "Item not found!\n";
+    }
 }
 
 //DELETE INVENTORY ITEM
 void deleteItem() {
-char name[50];
-bool found = false;
+    char name[50];
+    bool found = false;
 
-std::cin.ignore();
+    std::cin.ignore();
 
-std::cout << "Enter Item Name to delete: ";
-std::cin.getline(name, 50);
+    std::cout << "Enter Item Name to delete: ";
+    std::cin.getline(name, 50);
 
-for (int i = 0; i < MAX; i++) {
-    if (itemName[i] == name) {
+    for (int i = 0; i < MAX; i++) {
+        if (itemName[i] == name) {
 
-        std::cout << "Deleting: " << itemName[i] << "\n";
+            std::cout << "Deleting: " << itemName[i] << "\n";
 
-        // Clears row
-        itemName[i] = "";
-        itemCategory[i] = "";
-        itemQuantity[i] = "";
-        itemPrice[i] = "";
+            // Clears row
+            itemName[i] = "";
+            itemCategory[i] = "";
+            itemQuantity[i] = "";
+            itemPrice[i] = "";
 
-        // Shift remaining items up
-        for (int j = i; j < MAX - 1; j++) {
-            itemName[j] = itemName[j + 1];
-            itemCategory[j] = itemCategory[j + 1];
-            itemQuantity[j] = itemQuantity[j + 1];
-            itemPrice[j] = itemPrice[j + 1];
+            // Shift remaining items up
+            for (int j = i; j < MAX - 1; j++) {
+                itemName[j] = itemName[j + 1];
+                itemCategory[j] = itemCategory[j + 1];
+                itemQuantity[j] = itemQuantity[j + 1];
+                itemPrice[j] = itemPrice[j + 1];
+            }
+
+            totalItems--; // Update total items
+            std::cout << "Item removed successfully!\n";
+            found = true;
+            break;
         }
+    }
 
-        totalItems--; // Update total items
-        std::cout << "Item removed successfully!\n";
-        found = true;
-        break;
+    if (!found) {
+        std::cout << "Item not found!\n";
     }
 }
-
-if (!found)
-    std::cout << "Item not found!\n";
-
-}
-
 
 void financeManager() {
     int choice;
@@ -825,12 +851,23 @@ void financeManager() {
         }
 
         switch (choice) {
-            case 1: addFinance(); break;
-            case 2: viewFinance(); break;
-            case 3: updateFinance(); break;
-            case 4: deleteFinance(); break;
-            case 5: return;
-            default: std::cout << "Invalid option!\n";
+            case 1: 
+                addFinance(); 
+                break;
+            case 2: 
+                viewFinance(); 
+                break;
+            case 3: 
+                updateFinance(); 
+                break;
+            case 4: 
+                deleteFinance(); 
+                break;
+            case 5: 
+                return;
+            default: 
+                std::cout << "Invalid option!\n";
+                break;
         }
 
         saveFinance();
@@ -989,21 +1026,22 @@ void deleteFinance() {
 }
 
 void systemOverview() {
-int cropCount = 0;
-int livestockCount = 0;
-double inventoryValue = 0;
-double netFinance = 0;
+    int cropCount = 0;
+    int livestockCount = 0;
+    double inventoryValue = 0;
+    double netFinance = 0;
 
-// Count crops and livestock
-for (int i = 0; i < MAX; i++) {
-    if (fieldId[i] != "\0") cropCount++;
-    if (animalId[i] != "\0") livestockCount++;
-}
+    // Count crops and livestock
+    for (int i = 0; i < MAX; i++) {
+        if (fieldId[i] != "\0") cropCount++;
+        if (animalId[i] != "\0") livestockCount++;
+    }
 
-// Compute inventory value 
-for (int i = 0; i < totalItems; i++) {
-    int qty = 0;
-    double price = 0;
+    // Compute inventory value 
+    for (int i = 0; i < totalItems; i++) {
+        int qty = 0;
+        double price = 0;
+    }
 
     if (!itemQuantity[i].empty()) {
         std::stringstream ssQty(itemQuantity[i]);
@@ -1020,17 +1058,17 @@ for (int i = 0; i < totalItems; i++) {
 
 // Compute net finance
 for (int i = 0; i < totalFinance; i++) {
-    if (finType[i] == "Income" || finType[i] == "income")
+    if (finType[i] == "Income" || finType[i] == "income") {
         netFinance += finAmount[i];
-    else
+    }
+    else {
         netFinance -= finAmount[i];
-}
+    }
 
-std::cout << "\n========= SYSTEM OVERVIEW =========\n";
-std::cout << "Total Crop Records:      " << cropCount << "\n";
-std::cout << "Total Livestock Records: " << livestockCount << "\n";
-std::cout << "Total Inventory Value:   PHP " << inventoryValue << "\n";
-std::cout << "Net Finance Balance:     PHP " << netFinance << "\n";
-std::cout << "===================================\n";
-
+    std::cout << "\n========= SYSTEM OVERVIEW =========\n";
+    std::cout << "Total Crop Records:      " << cropCount << "\n";
+    std::cout << "Total Livestock Records: " << livestockCount << "\n";
+    std::cout << "Total Inventory Value:   PHP " << inventoryValue << "\n";
+    std::cout << "Net Finance Balance:     PHP " << netFinance << "\n";
+    std::cout << "===================================\n";
 }
