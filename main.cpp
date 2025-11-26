@@ -83,35 +83,40 @@ int totalFinance = 0;
 
 
 int main() {
- 
     int choice;
 
     do {
+        system("cls");
         mainMenu(choice);
         
         switch (choice) {
             // Crop Management
             case 1:
+                system("cls");
                 cropManager();
                 break;
 
             // Livestock Management
             case 2: 
+                system("cls");
                 livestockManager();
                 break;
 
             // Inventory Management
             case 3: 
+                system("cls");
                 inventoryManager();
                 break;
 
             // Financial Management
             case 4: 
+                system("cls");
                 financeManager(); 
                 break;
                 
             // System Overview
             case 5: 
+                system("cls");
                 systemOverview();
                 break;
 
