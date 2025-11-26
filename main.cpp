@@ -1041,30 +1041,30 @@ void systemOverview() {
     for (int i = 0; i < totalItems; i++) {
         int qty = 0;
         double price = 0;
-    }
 
-    if (!itemQuantity[i].empty()) {
-        std::stringstream ssQty(itemQuantity[i]);
-        ssQty >> qty;
-    }
+        if (!itemQuantity[i].empty()) {
+            std::stringstream ssQty(itemQuantity[i]);
+            ssQty >> qty;
+        }
 
-    if (!itemPrice[i].empty()) {
-        std::stringstream ssPrice(itemPrice[i]);
-        ssPrice >> price;
-    }
+        if (!itemPrice[i].empty()) {
+            std::stringstream ssPrice(itemPrice[i]);
+            ssPrice >> price;
+        }
 
-    inventoryValue += qty * price;
-}
+        inventoryValue += qty * price;
 
-// Compute net finance
-for (int i = 0; i < totalFinance; i++) {
-    if (finType[i] == "Income" || finType[i] == "income") {
-        netFinance += finAmount[i];
+        // Compute net finance
+        for (int i = 0; i < totalFinance; i++) {
+            if (finType[i] == "Income" || finType[i] == "income") {
+                netFinance += finAmount[i];
+            }
+            else {
+                netFinance -= finAmount[i];
+            }
+        }
     }
-    else {
-        netFinance -= finAmount[i];
-    }
-
+    
     std::cout << "\n========= SYSTEM OVERVIEW =========\n";
     std::cout << "Total Crop Records:      " << cropCount << "\n";
     std::cout << "Total Livestock Records: " << livestockCount << "\n";
