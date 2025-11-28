@@ -1,1 +1,2 @@
-\0
+
+    std::cout << "\n\n" << padding;
