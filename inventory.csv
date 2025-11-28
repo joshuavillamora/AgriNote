@@ -1,2 +1,20 @@
-Crowbar,Tool,2,15
-Bucket,Tool,7,300
+Fertilizer Urea,Consumable,120,850.00
+Shovel,Tool,15,350.00
+Watering Can,Tool,25,180.00
+Pesticide Spray,Consumable,60,420.00
+Seeds - Carrot,Seed,300,5.50
+Seeds - Potato,Seed,200,7.20
+Seeds - Corn,Seed,180,6.80
+Sack,Supply,90,25.00
+Twine Rope,Supply,75,15.00
+Tractor Diesel,Fuel,500,62.00
+Harvest Basket,Tool,40,90.00
+Organic Fertilizer,Consumable,100,500.00
+Plastic Mulch,Supply,150,120.00
+Netting Roll,Supply,30,350.00
+Rubber Boots,Clothing,20,400.00
+Gloves (Pair),Clothing,55,65.00
+Insecticide Powder,Consumable,80,110.00
+Herbicide Liquid,Consumable,70,155.00
+Greenhouse Film,Supply,12,950.00
+PVC Pipe 1”,Supply,100,50.00
